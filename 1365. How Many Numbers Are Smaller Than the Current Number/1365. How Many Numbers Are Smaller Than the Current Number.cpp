@@ -3,28 +3,64 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
+#include <map>
 using namespace std;
 
 vector<int> smallerNumbersThanCurrent(vector<int>& nums) {
-    vector<int> resultVector;
-    int biggerCounter = 0;
+    vector<int> sortedVector = nums;
+    int counter = 0;
+    int duplicateCounter = 0;
+    int duplicateIdentifier = 0;
+    map<int, int> numCount;
+
+    sort(sortedVector.begin(), sortedVector.end(), greater<>());
+
+    for (int num : sortedVector) {
+        if (!numCount[num]) {
+            duplicateIdentifier = counter + 1;
+
+            while (true) {
+                if (duplicateIdentifier >= sortedVector.size()) {
+                    break;
+                }
+
+                if (num != sortedVector[duplicateIdentifier]) {
+                    break;
+                }
+
+                duplicateCounter++;
+                duplicateIdentifier++;
+            }
+
+            numCount[num] = nums.size() - counter - duplicateCounter - 1;
+            duplicateCounter = 0;
+        }
+        
+        counter++;
+    }
+    
+    counter = 0;
 
     for (int num : nums) {
-        for (int i = 0; i < nums.size(); i++) {
-            if (num > nums[i]) {
-                biggerCounter++;
-            }
-        }
-
-        resultVector.push_back(biggerCounter);
-        biggerCounter = 0;
+        nums[counter] = numCount.find(num)->second;
+        counter++;
     }
 
-    return resultVector;
+    return nums;
 }
 
 int main()
 {
+    vector<int> nums;
+    nums.push_back(8);
+    nums.push_back(1);
+    nums.push_back(2);
+    nums.push_back(2);
+    nums.push_back(3);
+
+    auto test = smallerNumbersThanCurrent(nums);
+
     std::cout << "Hello World!\n";
 }
 
