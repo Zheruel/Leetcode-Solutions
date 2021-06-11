@@ -3,20 +3,19 @@
 
 #include <iostream>
 #include <vector>
+#include <map>
 using namespace std;
 
 int numIdenticalPairs(vector<int>& nums) {
+    map<int, int> pairsMap;
     int numOfPairs = 0;
-    int counter = 0;
 
     for (int num : nums) {
-        for (int i = counter + 1; i < nums.size(); i++) {
-            if (num == nums[i]) {
-                numOfPairs++;
-            }
-        }
+        pairsMap[num] += 1;
+    }
 
-        counter++;
+    for (auto num : pairsMap) {
+        numOfPairs += ((num.second) * (num.second - 1)) / 2;
     }
 
     return numOfPairs;
@@ -24,5 +23,13 @@ int numIdenticalPairs(vector<int>& nums) {
 
 int main()
 {
+    vector<int> nums;
+    nums.push_back(1);
+    nums.push_back(1);
+    nums.push_back(1);
+    nums.push_back(1);
+
+    auto test = numIdenticalPairs(nums);
+
     cout << "Done \n";
 }
